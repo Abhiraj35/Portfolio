@@ -267,30 +267,6 @@ export const ProjectComponents = {
     children: React.ReactNode;
     [key: string]: unknown;
   }) => {
-    const getTextContent = (node: React.ReactNode): string => {
-      if (typeof node === 'string') {
-        return node;
-      }
-      if (typeof node === 'number') {
-        return String(node);
-      }
-      if (
-        React.isValidElement(node) &&
-        node.props &&
-        typeof node.props === 'object'
-      ) {
-        return getTextContent(
-          (node.props as { children?: React.ReactNode }).children,
-        );
-      }
-      if (Array.isArray(node)) {
-        return node.map(getTextContent).join('');
-      }
-      return '';
-    };
-
-    const codeText = getTextContent(children);
-
     return (
       <div className="group relative mb-4">
         <pre
@@ -299,7 +275,6 @@ export const ProjectComponents = {
         >
           {children}
         </pre>
-        
       </div>
     );
   },

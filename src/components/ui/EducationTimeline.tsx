@@ -8,7 +8,7 @@ interface Props {
 }
 
 export default function EducationTimelineItem({ education }: Props) {
-  const { institution, degree, start, end, logo, href, description, links } =
+  const { institution, degree, start, end, logo, href, description } =
     education;
 
   return (

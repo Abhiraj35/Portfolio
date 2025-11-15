@@ -1,6 +1,6 @@
 import { systemPrompt } from '@/config/ChatPrompt';
-import { log } from 'console';
 import { createParser } from 'eventsource-parser';
+import type { EventSourceMessage } from 'eventsource-parser';
 import { NextRequest, NextResponse } from 'next/server';
 import * as z from 'zod';
 
@@ -216,7 +216,7 @@ if (!response.ok) {
       async start(controller) {
         try {
           const parser = createParser({
-            onEvent: (event:any) => {
+            onEvent: (event: EventSourceMessage) => {
               try {
                 const data = JSON.parse(event.data);
                 const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
