@@ -1,0 +1,143 @@
+---
+title: 'How Discord Stores Billions of Messages: The Engineering Behind Internet-Scale Chat'
+description: 'A deep dive into how Discord scaled its messaging system from a single MongoDB instance to a globally distributed Cassandra architecture.'
+image: '/blog/discord-cassandra.png'
+tags: ['databases', 'distributed-systems', 'cassandra', 'scaling', 'engineering']
+date: '2025-02-25'
+isPublished: true
+---
+
+## Why This Blog?
+
+Billions of messages. Millions of users online at the same time. Random access, wild traffic patterns, unpredictable load — *yet Discord barely breaks a sweat.*
+
+This blog breaks down the **actual engineering decisions**, problems, trade-offs, and solutions behind Discord’s massive messaging backend.
+
+No fluff. No oversimplification. Just the real technical story of how Discord went from:
+
+❌ a single MongoDB replica set  
+to  
+✅ a horizontally scalable Cassandra cluster powering billions of messages.
+
+---
+
+## Introduction
+
+When people think about Discord, they imagine servers, channels, memes, bots, and voice chat.  
+But at its core lies one monstrous challenge:
+
+**How do you store and fetch messages at global scale without falling apart?**
+
+Discord solved this by evolving from a quick MVP built on MongoDB into a finely tuned, massively scalable Cassandra-based system.
+
+Let’s break it down step-by-step.
+
+---
+
+## What Discord Started With: MongoDB (2015)
+
+Back in early 2015, Discord was built *fast* — the team wanted to validate the product, not architect a perfect backend.
+
+So they picked **MongoDB**, because:
+
+- it was easy  
+- it was flexible  
+- it allowed them to move fast  
+- they could always replace it later
+
+Everything lived in **a single MongoDB replica set**.  
+Message documents were indexed by:
+
+- `channel_id`
+- `created_at`
+
+That worked… until it didn’t.
+
+### The Breaking Point
+
+By **November 2015**, Discord hit **100 million stored messages**.
+
+MongoDB couldn't keep all indexes in memory, and reads became painfully inconsistent:
+
+- some queries were fast  
+- others felt like scanning an entire library shelf manually  
+
+This was the first clear sign:
+
+**MongoDB wasn’t going to scale with Discord’s growth.**
+
+---
+
+## Understanding the Traffic: Why MongoDB Failed
+
+Before choosing a new database, the team analyzed how Discord users actually behave.
+
+They discovered 3 types of servers:
+
+### 1. Voice-heavy Servers
+Barely send messages.  
+So fetching even 50 old messages = **cold reads**, hitting disk directly → slow.
+
+### 2. Private Text-heavy Servers
+100k–1M messages per year but low daily activity.  
+Again: many cold reads → unpredictable.
+
+### 3. Large Public Servers
+Millions of messages per year.  
+Reads stay in memory cache → fast.
+
+But Discord also planned features like:
+
+- jump to mention  
+- pinned messages  
+- searching months into history  
+
+These are **random reads**, MongoDB’s weak spot.
+
+Conclusion:
+
+**MongoDB wasn’t built for scattered, unpredictable, high-volume reads.**
+
+---
+
+## What Discord Needed (The Requirements)
+
+Discord wanted a system that:
+
+- Scales linearly — just add nodes  
+- Self-heals — automatic failover  
+- Requires minimal ops work  
+- Is battle-tested  
+- Delivers predictable \<80ms read latency  
+- Doesn’t require extra caching layers  
+- Isn’t a blob store  
+- Is open-source
+
+The answer was very obvious:
+
+## → Apache Cassandra
+
+Why?
+
+- Horizontal scaling  
+- Predictable read/write performance  
+- Proven at massive scale (Netflix, Apple)  
+- Handles high write throughput  
+- Data layout minimizes disk seeks  
+- Fully open source  
+
+Decision made.
+
+---
+
+## Modeling Data in Cassandra
+
+Cassandra works like a **Key–Key–Value** store:
+
+- **Partition key** → decides what machine holds the data  
+- **Clustering key** → orders data inside the partition  
+- **Value** → actual row content  
+
+For Discord, every message already had a **Snowflake ID** (unique + time-ordered).
+
+So the primary key became:
