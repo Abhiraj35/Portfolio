@@ -48,7 +48,10 @@ export const useThemeToggle = ({
     console.log('content updated');
   }, []);
 
+  const playClickSound = () => new Audio('/sounds/click.wav').play();
   const toggleTheme = useCallback(() => {
+    playClickSound();
+
     setIsDark(!isDark);
 
     const animation = createAnimation(variant, start, blur, gifUrl);

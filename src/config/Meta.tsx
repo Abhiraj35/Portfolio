@@ -20,8 +20,8 @@ export const siteConfig = {
     name: about.name,
     twitter: '@abhiraj',
     github: 'abhiraj',
-    linkedin: 'abhiraj',
-    email: 'abhiraj@example.com',
+    linkedin: 'abhiraj01',
+    email: 'royabhi2406@gmail.com',
   },
   keywords: [
     'portfolio',
@@ -35,6 +35,7 @@ export const siteConfig = {
   ],
 };
 
+//TODO: Add metadata for other pages
 export const pageMetadata: Record<string, PageMeta> = {
   // Home page
   '/': {

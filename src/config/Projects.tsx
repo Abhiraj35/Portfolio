@@ -10,8 +10,9 @@ export const projects: Project[] = [
     title: 'Portfolio Website',
     description:
       'My personal portfolio built with Next.js, TypeScript, Tailwind CSS, and shadcn/ui.',
-    image: '/project/ramspace.png',//TODO: Update this image
+    image: '/project/portfolio.png',
     link: '/',
+    github: 'https://github.com/Abhiraj35/portfolio',
     technologies: [
       { name: 'Next.js', icon: <NextJs key="nextjs" /> },
       { name: 'TypeScript', icon: <TypeScript key="typescript" /> },
@@ -28,7 +29,7 @@ export const projects: Project[] = [
     title: "AgriEmpower",
     description:
       "AgriEmpower is a platform connecting farmers and buyers for direct trade. Built during my first-year inter-college hackathon, it features product listings, a chat system, a chatbot, and user authentication.",
-    image: '/project/agriempower.png',//TODO: Update this image
+    image: '/project/agriempower.png',
     link: "https://agriamigo.netlify.app/",
     technologies: [
       { name: "React", icon: <ReactIcon key="react" /> },
@@ -46,7 +47,7 @@ export const projects: Project[] = [
     title: "Miranda - Paper Animated Website",
     description:
       "Miranda is a paper-styled animated website showcasing high-quality animations, smooth transitions, and layered motion effects. It has been featured on awarded websites for its creativity and interaction design.",
-    image: '/project/miranda.png',//TODO: Update this image
+    image: '/project/mirenda.png',
     link: "https://abhiraj35.github.io/Miranda---paper-animated-website/",
     technologies: [
       { name: 'Next.js', icon: <NextJs key="nextjs" /> },
