@@ -32,7 +32,7 @@ export function BlogCard({ post }: BlogCardProps) {
       <CardHeader className="p-0">
         <div className="relative aspect-video overflow-hidden">
           <Link href={`/blog/${slug}`}>
-            <Image src={image} alt={title} fill className="object-cover" />
+            <Image src={image} alt={title} fill className="object-center" />
           </Link>
         </div>
       </CardHeader>

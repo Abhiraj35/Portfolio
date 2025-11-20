@@ -1,8 +1,8 @@
 ---
 title: 'How Discord Stores Billions of Messages: The Engineering Behind Internet-Scale Chat'
 description: 'A deep dive into how Discord scaled its messaging system from a single MongoDB instance to a globally distributed Cassandra architecture.'
-image: '/blog/discord-cassandra.png'
-tags: ['databases', 'distributed-systems', 'cassandra', 'scaling', 'engineering']
+image: '/blog/discord.jpeg'
+tags: ['databases', 'distributed-systems', 'scaling', 'engineering']
 date: '2025-02-25'
 isPublished: true
 ---
@@ -15,9 +15,9 @@ This blog breaks down the **actual engineering decisions**, problems, trade-offs
 
 No fluff. No oversimplification. Just the real technical story of how Discord went from:
 
-❌ a single MongoDB replica set  
-to  
-✅ a horizontally scalable Cassandra cluster powering billions of messages.
+a single MongoDB replica set  
+    To
+a horizontally scalable Cassandra cluster powering billions of messages.
 
 ---
 
@@ -139,5 +139,3 @@ Cassandra works like a **Key–Key–Value** store:
 - **Value** → actual row content  
 
 For Discord, every message already had a **Snowflake ID** (unique + time-ordered).
-
-So the primary key became:

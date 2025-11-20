@@ -31,7 +31,7 @@ export function BlogContent({ frontmatter, content }: BlogContentProps) {
             src={image}
             alt={title}
             fill
-            className="object-cover"
+            className="object-center"
             priority
           />
         </div>
