@@ -40,44 +40,10 @@ function calculateLevel(count: number): 0 | 1 | 2 | 3 | 4 {
     return 4;
 }
 
-// Helper to calculate streaks and active days
-function calculateStats(contributions: ContributionItem[]) {
-    const sorted = [...contributions].sort(
-        (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
-    );
 
-    const totalActiveDays = sorted.filter((item) => item.count > 0).length;
-    const totalSubmissions = sorted.reduce((sum, item) => sum + item.count, 0);
-
-    let maxStreak = 0;
-    let currentStreak = 0;
-    let tempStreak = 0;
-
-    // We need to iterate day by day to check for gaps
-    if (sorted.length > 0) {
-        const startDate = new Date(sorted[0].date);
-        const endDate = new Date(sorted[sorted.length - 1].date);
-
-        for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
-            const dateStr = d.toISOString().split('T')[0];
-            const hasContribution = sorted.find((item) => item.date === dateStr && item.count > 0);
-
-            if (hasContribution) {
-                tempStreak++;
-            } else {
-                maxStreak = Math.max(maxStreak, tempStreak);
-                tempStreak = 0;
-            }
-        }
-        maxStreak = Math.max(maxStreak, tempStreak);
-    }
-
-    return { totalActiveDays, totalSubmissions, maxStreak };
-}
 
 export default function LeetCode() {
     const [contributions, setContributions] = useState<ContributionItem[]>([]);
-    const [stats, setStats] = useState({ totalActiveDays: 0, totalSubmissions: 0, maxStreak: 0 });
     const [isLoading, setIsLoading] = useState(true);
     const [total, setTotal] = useState(0);
     const [hasError, setHasError] = useState(false);
@@ -112,7 +78,7 @@ export default function LeetCode() {
 
                     const filteredContributions = filterLastYear(calendarData);
                     setContributions(filteredContributions);
-                    setStats(calculateStats(filteredContributions));
+
                 } else {
                     setHasError(true);
                 }
