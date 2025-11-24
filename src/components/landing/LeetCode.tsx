@@ -122,7 +122,7 @@ export default function LeetCode() {
                     <div>
                         <h2 className="text-2xl font-bold">{leetCodeConfig.title}</h2>
                         <p className="text-sm text-muted-foreground">
-                            <b>{leetCodeConfig.username}</b>’s {leetCodeConfig.subtitle}
+                            <Link href={leetCodeConfig.url} target="_blank" className='border-1 border-border rounded-md px-2 py-1 border-dashed bg-[#313131]'>{leetCodeConfig.username}</Link> {leetCodeConfig.subtitle}
                         </p>
                     </div>
                     {total > 0 && (

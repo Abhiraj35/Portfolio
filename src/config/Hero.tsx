@@ -64,7 +64,7 @@ export const heroConfig = {
   // Description Configuration
   description: {
     template:
-      'I build interactive web apps using {skills:0}, {skills:1}, {skills:2}, {skills:3} and {skills:4}. I focus on clean UI, performance, and scalable systems.',
+      'I build interactive web apps using {skills:0}, {skills:1}, {skills:2}, {skills:3} and {skills:4}. I focus on clean UI, performance.',
   },
 
   // Buttons Configuration
@@ -86,11 +86,11 @@ export const heroConfig = {
 
 // Social Links Configuration
 export const socialLinks = [
-  {
-    name: 'X',
-    href: 'https://x.com/abhiraj',
-    icon: <X />,
-  },
+  // {
+  //   name: 'X',
+  //   href: 'https://x.com/abhiraj',
+  //   icon: <X />,
+  // },
   {
     name: 'LinkedIn',
     href: 'https://www.linkedin.com/in/abhiraj01/',

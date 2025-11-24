@@ -1,4 +1,7 @@
 import NextJs from '@/components/technologies/NextJs';
+import HTML from '@/components/technologies/Html';
+import CSS from '@/components/technologies/CSS';
+import JavaScript from '@/components/technologies/JavaScript';
 import ReactIcon from '@/components/technologies/ReactIcon';
 import Shadcn from '@/components/technologies/Shadcn';
 import TailwindCss from '@/components/technologies/TailwindCss';
@@ -50,11 +53,9 @@ export const projects: Project[] = [
     image: '/project/mirenda.png',
     link: "https://abhiraj35.github.io/Miranda---paper-animated-website/",
     technologies: [
-      { name: 'Next.js', icon: <NextJs key="nextjs" /> },
-      { name: 'TypeScript', icon: <TypeScript key="typescript" /> },
-      { name: 'React', icon: <ReactIcon key="react" /> },
-      { name: 'Tailwind CSS', icon: <TailwindCss key="tailwindcss" /> },
-      { name: 'shadcn/ui', icon: <Shadcn key="shadcn" /> },
+      { name: 'HTML', icon: <HTML key="html" /> },
+      { name: 'CSS', icon: <CSS key="css" /> },
+      { name: 'JavaScript', icon: <JavaScript key="javascript" /> },
     ],
     live: "https://abhiraj35.github.io/Miranda---paper-animated-website/",
     github: "https://github.com/Abhiraj35/Miranda---paper-animated-website",
