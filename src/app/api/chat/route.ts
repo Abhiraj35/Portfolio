@@ -197,7 +197,7 @@ export async function POST(request: NextRequest) {
       },
     };
 
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:streamGenerateContent?alt=sse&key=${apiKey}`;
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-exp:streamGenerateContent?alt=sse&key=${apiKey}`;
 
     const response = await fetch(geminiUrl, {
       method: 'POST',
@@ -206,7 +206,7 @@ export async function POST(request: NextRequest) {
       },
       body: JSON.stringify(requestBody),
     });
-if (!response.ok) {
+    if (!response.ok) {
       throw new Error(`Gemini API error: ${response.status}`);
     }
 
@@ -282,7 +282,7 @@ if (!response.ok) {
     }
 
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: error instanceof Error ? error.message : 'Internal server error' },
       { status: 500 },
     );
   }

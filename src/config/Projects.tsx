@@ -10,6 +10,23 @@ import { Project } from '@/types/project';
 
 export const projects: Project[] = [
   {
+    title: 'GitTutorial',
+    description:
+      'A Git tutorial built with React.js, JavaScript, and Tailwind CSS Gemini SDK.',
+    image: '/project/git-tutorial.png',
+    link: 'https://git-tutorials.netlify.app',
+    github: 'https://github.com/Abhiraj35/GitTutorial',
+    technologies: [
+      { name: 'React.js', icon: <ReactIcon key="react" /> },
+      { name: 'JavaScript', icon: <JavaScript key="javascript" /> },
+      { name: 'Tailwind CSS', icon: <TailwindCss key="tailwindcss" /> },
+    ],
+    live: 'https://git-tutorials.netlify.app',
+    details: false,
+    projectDetailsPageSlug: '/projects/GitTutorial',
+    isWorking: true,
+  },
+  {
     title: 'Portfolio Website',
     description:
       'My personal portfolio built with Next.js, TypeScript, Tailwind CSS, and shadcn/ui.',
