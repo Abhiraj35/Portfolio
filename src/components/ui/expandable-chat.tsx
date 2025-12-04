@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { useHapticFeedback } from '@/hooks/use-haptic-feedback';
 import { cn } from '@/lib/utils';
 import { MessageCircle, X } from 'lucide-react';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 export type ChatPosition = 'bottom-right' | 'bottom-left';
 export type ChatSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
@@ -48,11 +48,30 @@ const ExpandableChat: React.FC<ExpandableChatProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const chatRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        isOpen &&
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
 
   const toggleChat = () => setIsOpen(!isOpen);
 
   return (
     <div
+      ref={containerRef}
       className={cn(
         `fixed ${chatConfig.positions[position]} z-50 hover:cursor-pointer`,
         className,
