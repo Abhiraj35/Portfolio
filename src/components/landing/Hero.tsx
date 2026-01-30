@@ -8,13 +8,11 @@ import React from 'react';
 import Container from '../common/Container';
 import Skill from '../common/Skill';
 import CV from '../svgs/CV'
-import Chat from '../svgs/Chat';
 import { Button } from '../ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
 const buttonIcons = {
   CV: CV,
-  Chat: Chat,
 };
 
 export default function Hero() {
@@ -82,9 +80,9 @@ export default function Hero() {
               variant={button.variant as 'outline' | 'default'}
               className={cn(
                 button.variant === 'outline' &&
-                  'inset-shadow-indigo-500',
+                'inset-shadow-indigo-500',
                 button.variant === 'default' &&
-                  'inset-shadow-indigo-500',
+                'inset-shadow-indigo-500',
               )}
             >
               {IconComponent && <IconComponent />}
