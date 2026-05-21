@@ -1,14 +1,52 @@
-import NextJs from '@/components/technologies/NextJs';
+import NodeJs from '@/components/technologies/NodeJs';
 import HTML from '@/components/technologies/Html';
 import CSS from '@/components/technologies/CSS';
 import JavaScript from '@/components/technologies/JavaScript';
 import ReactIcon from '@/components/technologies/ReactIcon';
-import Shadcn from '@/components/technologies/Shadcn';
+import Redis from '@/components/technologies/Redis';
 import TailwindCss from '@/components/technologies/TailwindCss';
 import TypeScript from '@/components/technologies/TypeScript';
 import { Project } from '@/types/project';
+import Bun from '@/components/technologies/Bun';
 
 export const projects: Project[] = [
+  {
+  title: 'bextool',
+  description:
+    'An open-source CLI that scaffolds production-ready starter apps for frontend, backend, full-stack, mobile, browser extensions, and more.',
+  image: '/project/bextool.png', 
+  link: 'https://bextool.tech',
+  github: 'https://github.com/bextool-cli/bextool',
+  technologies: [
+    { name: 'Node.js', icon: <NodeJs key="nodejs" /> },
+    { name: 'TypeScript', icon: <TypeScript key="typescript" /> },
+    { name: 'React.js', icon: <ReactIcon key="react" /> },
+    { name: 'Tailwind CSS', icon: <TailwindCss key="tailwindcss" /> },
+  ],
+  live: 'https://bextool.tech',
+  details: false,
+  projectDetailsPageSlug: '/projects/bextool',
+  isWorking: true,
+},
+
+  {
+    title: 'Flux-Private Chat App',
+    description:
+      'A secure, real-time messaging platform featuring ephemeral chatrooms that automatically self-destruct after 10 minutes.',
+    image: '/project/flux.png',
+    link: 'https://flux-chat-app.vercel.app',
+    github: 'https://github.com/Abhiraj35/Real-time-chat-app',
+    technologies: [
+      { name: 'Bun.js', icon: <Bun key="bun" /> },
+      { name: 'TypeScript', icon: <TypeScript key="typescript" /> },
+      { name: 'Tailwind CSS', icon: <TailwindCss key="tailwindcss" /> },
+      { name: 'Redis', icon: <Redis key="redis" /> },
+    ],
+    live: 'https://flux-chat-app.vercel.app',
+    details: false,
+    projectDetailsPageSlug: '/projects/flux',
+    isWorking: true,
+  },
   {
     title: 'GitTutorial',
     description:
@@ -24,25 +62,6 @@ export const projects: Project[] = [
     live: 'https://git-tutorials.netlify.app',
     details: false,
     projectDetailsPageSlug: '/projects/GitTutorial',
-    isWorking: true,
-  },
-  {
-    title: 'Portfolio Website',
-    description:
-      'My personal portfolio built with Next.js, TypeScript, Tailwind CSS, and shadcn/ui.',
-    image: '/project/portfolio.png',
-    link: '/',
-    github: 'https://github.com/Abhiraj35/portfolio',
-    technologies: [
-      { name: 'Next.js', icon: <NextJs key="nextjs" /> },
-      { name: 'TypeScript', icon: <TypeScript key="typescript" /> },
-      { name: 'React', icon: <ReactIcon key="react" /> },
-      { name: 'Tailwind CSS', icon: <TailwindCss key="tailwindcss" /> },
-      { name: 'shadcn/ui', icon: <Shadcn key="shadcn" /> },
-    ],
-    live: '/',
-    details: false,
-    projectDetailsPageSlug: '/projects',
     isWorking: true,
   },
   {
@@ -81,4 +100,3 @@ export const projects: Project[] = [
     isWorking: true,
   },
 ];
-

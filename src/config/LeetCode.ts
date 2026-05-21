@@ -3,7 +3,7 @@ import { ThemeInput } from 'react-activity-calendar';
 export const leetCodeConfig = {
     username: '__abhiraj_24_',
     url: 'https://leetcode.com/__abhiraj_24_',
-    apiUrl: 'https://leetcode-stats-api.herokuapp.com',
+    apiUrl: '/api/leetcode',
     title: 'LeetCode Activity',
     subtitle: 'problem solving journey',
     loadingState: {

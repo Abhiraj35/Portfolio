@@ -54,34 +54,47 @@ export default function LeetCode() {
             try {
                 setIsLoading(true);
                 const response = await fetch(
-                    `${leetCodeConfig.apiUrl}/${leetCodeConfig.username}`,
+                    `${leetCodeConfig.apiUrl}?username=${encodeURIComponent(
+                        leetCodeConfig.username,
+                    )}`,
                 );
-                const data = await response.json();
-                setTotal(data.totalSolved);
-                if (data.status === 'success' && data.submissionCalendar) {
-                    // Transform submissionCalendar (epoch -> count) to ContributionItem
-                    const calendarData = Object.entries(data.submissionCalendar).map(
-                        ([timestamp, count]) => {
-                            const date = new Date(parseInt(timestamp) * 1000);
-                            return {
-                                date: date.toISOString().split('T')[0],
-                                count: Number(count),
-                                level: calculateLevel(Number(count)),
-                            };
-                        },
-                    );
 
-                    // Sort by date
+                if (!response.ok) {
+                    throw new Error('Failed to load LeetCode data');
+                }
+
+                const data = await response.json();
+
+                if (data.status !== 'success') {
+                    throw new Error(data.message || 'Failed to load LeetCode data');
+                }
+
+                setTotal(Number(data.totalSolved) || 0);
+
+                if (data.submissionCalendar) {
+                    const calendarData = Object.entries(
+                        data.submissionCalendar as Record<string, number>,
+                    ).map(([timestamp, count]) => {
+                        const date = new Date(Number(timestamp) * 1000);
+                        const solved = Number(count);
+
+                        return {
+                            date: date.toISOString().split('T')[0],
+                            count: solved,
+                            level: calculateLevel(solved),
+                        };
+                    });
+
                     calendarData.sort(
                         (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
                     );
 
-                    const filteredContributions = filterLastYear(calendarData);
-                    setContributions(filteredContributions);
-
-                } else {
-                    setHasError(true);
+                    setContributions(filterLastYear(calendarData));
+                    setHasError(false);
+                    return;
                 }
+
+                throw new Error('No submission calendar returned');
             } catch (err) {
                 console.error('Failed to fetch LeetCode data:', err);
                 setHasError(true);
@@ -122,7 +135,7 @@ export default function LeetCode() {
                     <div>
                         <h2 className="text-2xl font-bold">{leetCodeConfig.title}</h2>
                         <p className="text-sm text-muted-foreground">
-                            <Link href={leetCodeConfig.url} target="_blank" className='border-1 border-border rounded-md px-2 py-1 border-dashed bg-[#313131]'>{leetCodeConfig.username}</Link> {leetCodeConfig.subtitle}
+                            <Link href={leetCodeConfig.url} target="_blank" className='border border-border rounded-md px-2 py-1 border-dashed bg-muted'>{leetCodeConfig.username}</Link> {leetCodeConfig.subtitle}
                         </p>
                     </div>
                     {total > 0 && (
@@ -165,7 +178,7 @@ export default function LeetCode() {
                                     const monthName = new Date(year, month).toLocaleString('default', { month: 'short' });
 
                                     return (
-                                        <div key={monthKey} className="flex flex-col items-center gap-2 flex-shrink-0">
+                                        <div key={monthKey} className="flex flex-col items-center gap-2 shrink-0">
                                             <ActivityCalendar
                                                 data={contributionsByMonth[monthKey]}
                                                 blockSize={10}
