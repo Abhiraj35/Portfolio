@@ -48,7 +48,7 @@ export const pageMetadata: Record<string, PageMeta> = {
       'web development',
       'projects',
     ],
-    ogImage: '/meta/hero.png',
+    ogImage: '/meta/opengraph-image.png',
     twitterCard: 'summary_large_image',
   },
 
@@ -58,7 +58,7 @@ export const pageMetadata: Record<string, PageMeta> = {
     description:
       "Get in touch with me for collaborations, projects, or opportunities. I'd love to hear from you!",
     keywords: ['contact', 'hire', 'collaboration', 'freelance', 'developer'],
-    ogImage: '/assets/logo.png',
+    ogImage: '/meta/opengraph-image.png',
     twitterCard: 'summary',
   },
 
@@ -74,7 +74,7 @@ export const pageMetadata: Record<string, PageMeta> = {
       'applications',
       'software',
     ],
-    ogImage: '/meta/projects.png',
+    ogImage: '/meta/opengraph-image.png',
     twitterCard: 'summary_large_image',
   },
 
@@ -90,7 +90,7 @@ export const pageMetadata: Record<string, PageMeta> = {
       'web development',
       'technical writing',
     ],
-    ogImage: '/meta/blogs.png',
+    ogImage: '/meta/opengraph-image.png',
     twitterCard: 'summary_large_image',
   },
 
@@ -106,7 +106,7 @@ export const pageMetadata: Record<string, PageMeta> = {
       'qualifications',
       'download',
     ],
-    ogImage: '/meta/resume.png',
+    ogImage: '/meta/opengraph-image.png',
     twitterCard: 'summary',
   },
 };
@@ -165,4 +165,3 @@ export function generateMetadata(pathname: string) {
     },
   };
 }
-
