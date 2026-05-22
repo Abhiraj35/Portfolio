@@ -15,7 +15,7 @@ export const siteConfig = {
   title: 'Abhiraj Kumar — Portfolio',
   description: 'Portfolio of Abhiraj Kumar',
   url: process.env.NEXT_PUBLIC_URL || 'http://localhost:3000',
-  ogImage: '/meta/opengraph-image.png',
+  ogImage: '/meta/opengraph-image.jpg',
   author: {
     name: about.name,
     twitter: '@abhiraj',
@@ -48,7 +48,7 @@ export const pageMetadata: Record<string, PageMeta> = {
       'web development',
       'projects',
     ],
-    ogImage: '/meta/opengraph-image.png',
+    ogImage: '/meta/opengraph-image.jpg',
     twitterCard: 'summary_large_image',
   },
 
@@ -58,7 +58,7 @@ export const pageMetadata: Record<string, PageMeta> = {
     description:
       "Get in touch with me for collaborations, projects, or opportunities. I'd love to hear from you!",
     keywords: ['contact', 'hire', 'collaboration', 'freelance', 'developer'],
-    ogImage: '/meta/opengraph-image.png',
+    ogImage: '/meta/opengraph-image.jpg',
     twitterCard: 'summary',
   },
 
@@ -74,7 +74,7 @@ export const pageMetadata: Record<string, PageMeta> = {
       'applications',
       'software',
     ],
-    ogImage: '/meta/opengraph-image.png',
+    ogImage: '/meta/opengraph-image.jpg',
     twitterCard: 'summary_large_image',
   },
 
@@ -90,7 +90,7 @@ export const pageMetadata: Record<string, PageMeta> = {
       'web development',
       'technical writing',
     ],
-    ogImage: '/meta/opengraph-image.png',
+    ogImage: '/meta/opengraph-image.jpg',
     twitterCard: 'summary_large_image',
   },
 
@@ -106,7 +106,7 @@ export const pageMetadata: Record<string, PageMeta> = {
       'qualifications',
       'download',
     ],
-    ogImage: '/meta/opengraph-image.png',
+    ogImage: '/meta/opengraph-image.jpg',
     twitterCard: 'summary',
   },
 };
