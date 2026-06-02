@@ -1,6 +1,4 @@
 import NodeJs from '@/components/technologies/NodeJs';
-import HTML from '@/components/technologies/Html';
-import CSS from '@/components/technologies/CSS';
 import JavaScript from '@/components/technologies/JavaScript';
 import ReactIcon from '@/components/technologies/ReactIcon';
 import Redis from '@/components/technologies/Redis';
@@ -8,6 +6,8 @@ import TailwindCss from '@/components/technologies/TailwindCss';
 import TypeScript from '@/components/technologies/TypeScript';
 import { Project } from '@/types/project';
 import Bun from '@/components/technologies/Bun';
+import NextJs from '@/components/technologies/NextJs';
+import Shadcn from '@/components/technologies/Shadcn';
 
 export const projects: Project[] = [
   {
@@ -65,38 +65,21 @@ export const projects: Project[] = [
     isWorking: true,
   },
   {
-    title: "AgriEmpower",
+    title: 'InkHive',
     description:
-      "AgriEmpower is a platform connecting farmers and buyers for direct trade. Built during my first-year inter-college hackathon, it features product listings, a chat system, a chatbot, and user authentication.",
-    image: '/project/agriempower.png',
-    link: "https://agriamigo.netlify.app/",
+      'A multi-agent AI content platform that turns a single topic or article into blog posts, social content, email newsletters, and SEO metadata. Specialized agents research, write, optimize, and prepare assets for publishing.',
+    image: '/project/inkhive.png',
+    link: 'https://ink-hive-pearl.vercel.app',
+    github: 'https://github.com/Abhiraj35/InkHive',
     technologies: [
-      { name: "React", icon: <ReactIcon key="react" /> },
-      { name: "Tailwind CSS", icon: <TailwindCss key="tailwindcss" /> },
-      // { name: "AI Chatbot", icon: <Sparkles key="ai" /> }, // replace with your AI icon component
+      { name: 'Next.js', icon: <NextJs key="nextjs" /> },
+      { name: 'TypeScript', icon: <TypeScript key="typescript" /> },
+      { name: 'Tailwind CSS', icon: <TailwindCss key="tailwindcss" /> },
+      { name: 'shadcn/ui', icon: <Shadcn key="shadcn" /> },
     ],
-    live: "https://agriamigo.netlify.app/",
-    github: "https://github.com/Abhiraj35/AgriEmpower",
+    live: 'https://ink-hive-pearl.vercel.app',
     details: false,
-    projectDetailsPageSlug: "/projects/agriempower",
-    isWorking: true,
-  },
-
-  {
-    title: "Miranda - Paper Animated Website",
-    description:
-      "Miranda is a paper-styled animated website showcasing high-quality animations, smooth transitions, and layered motion effects. It has been featured on awarded websites for its creativity and interaction design.",
-    image: '/project/mirenda.png',
-    link: "https://abhiraj35.github.io/Miranda---paper-animated-website/",
-    technologies: [
-      { name: 'HTML', icon: <HTML key="html" /> },
-      { name: 'CSS', icon: <CSS key="css" /> },
-      { name: 'JavaScript', icon: <JavaScript key="javascript" /> },
-    ],
-    live: "https://abhiraj35.github.io/Miranda---paper-animated-website/",
-    github: "https://github.com/Abhiraj35/Miranda---paper-animated-website",
-    details: false,
-    projectDetailsPageSlug: "/projects/miranda",
+    projectDetailsPageSlug: '/projects/inkhive',
     isWorking: true,
   },
 ];

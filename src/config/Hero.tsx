@@ -34,19 +34,19 @@ export const heroConfig = {
   // Skills Configuration
   skills: [
     {
-      name: 'JavaScript',
-      href: 'https://www.javascript.org/',
-      component: 'JavaScript',
+      name: 'Next.js',
+      href: 'https://nextjs.org/',
+      component: 'NextJs',
+    },
+    {
+      name: 'TypeScript',
+      href: 'https://www.typescriptlang.org/',
+      component: 'TypeScript',
     },
     {
       name: 'React',
       href: 'https://react.dev/',
       component: 'ReactIcon',
-    },
-    {
-      name: 'Next.js',
-      href: 'https://nextjs.org/',
-      component: 'NextJs',
     },
     {
       name: 'Node.js',
@@ -63,7 +63,7 @@ export const heroConfig = {
   // Description Configuration
   description: {
     template:
-      'I build interactive web apps using {skills:0}, {skills:1}, {skills:2}, {skills:3} and {skills:4}. I focus on clean UI, performance.',
+      "Yup! I'm a Full Stack Developer. Big deal, right? But wait... there's more! I'm not just any developer, I love building solutions and solving problems. I enjoy crafting websites with {skills:0}, {skills:1}, {skills:2}, {skills:3} and {skills:4}.",
   },
 
   // Buttons Configuration

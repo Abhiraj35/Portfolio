@@ -31,11 +31,11 @@ export function ProjectCard({ project }: ProjectCardProps) {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
   return (
-    <Card className="group h-full w-full overflow-hidden transition-all pb-4 border-gray-100 dark:border-gray-800 shadow-none">
+    <Card className="group/card h-full w-full overflow-hidden border-black/20 pb-4 shadow-none transition-[border-color,box-shadow] duration-300 ease-out hover:border-primary/40 hover:shadow-sm dark:border-white/10">
       <CardHeader className="p-0">
-        <div className="group relative aspect-video overflow-hidden">
+        <div className="relative aspect-video overflow-hidden">
           <Image
-            className="h-full w-full object-cover"
+            className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover/card:scale-[1.02]"
             src={project.image}
             alt={project.title}
             width={1920}
@@ -44,10 +44,10 @@ export function ProjectCard({ project }: ProjectCardProps) {
           {project.video && (
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
               <DialogTrigger asChild>
-                <div className="absolute inset-0 flex cursor-pointer items-center justify-center bg-black/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100 hover:backdrop-blur-xs">
-                  <button className="flex size-16 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm transition-colors duration-200 group-hover:cursor-pointer hover:bg-white/30">
+                <div className="absolute inset-0 flex cursor-pointer items-center justify-center bg-black/30 opacity-0 transition-opacity duration-300 ease-out group-hover/card:opacity-100">
+                  <div className="flex size-14 scale-90 items-center justify-center rounded-full bg-white/25 text-white backdrop-blur-sm transition-transform duration-300 ease-out group-hover/card:scale-100">
                     <PlayCircle />
-                  </button>
+                  </div>
                 </div>
               </DialogTrigger>
               <DialogContent className="max-w-4xl w-full p-0 border-0">
@@ -72,7 +72,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
           {/* Project Header - Title and Icons */}
           <div className="flex items-center justify-between gap-4">
             <Link href={project.projectDetailsPageSlug}>
-              <h3 className="text-xl font-semibold leading-tight group-hover:text-primary hover:cursor-pointer">
+              <h3 className="text-xl font-semibold leading-tight transition-colors duration-300 ease-out group-hover/card:text-primary">
                 {project.title}
               </h3>
             </Link>
@@ -122,7 +122,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
               {project.technologies.map((technology, index) => (
                 <Tooltip key={index}>
                   <TooltipTrigger>
-                    <div className="size-6 hover:scale-120 transition-all duration-300 hover:cursor-pointer">
+                    <div className="size-6 transition-transform duration-200 ease-out hover:scale-110">
                       {technology.icon}
                     </div>
                   </TooltipTrigger>
