@@ -1,13 +1,6 @@
-
 export default function Redis() {
     return (
-        <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            width="24"
-            height="24"
-            xmlns="http://www.w3.org/2000/svg"
-        >
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
                 d="M12 3C7.58172 3 4 4.79086 4 7V17C4 19.2091 7.58172 21 12 21C16.4183 21 20 19.2091 20 17V7C20 4.79086 16.4183 3 12 3Z"
                 fill="#DC382D"

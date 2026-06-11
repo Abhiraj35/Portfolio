@@ -1,4 +1,5 @@
-import { about, mySkills } from '@/config/About';
+import { about } from '@/config/About';
+import { allSkills, skillComponents } from '@/config/Skills';
 import Image from 'next/image';
 import React from 'react';
 
@@ -24,14 +25,22 @@ export default function About() {
           <p className="text-secondary mt-4">{about.description}</p>
           <p className="text-secondary mt-8 font-bold">Skills</p>
           <div className="flex flex-wrap gap-2">
-            {mySkills.map((skill) => (
-              <Tooltip key={skill.key}>
-                <TooltipTrigger asChild>
-                  <div className="mt-4 size-6 hover:cursor-pointer">{skill}</div>
-                </TooltipTrigger>
-                <TooltipContent>{skill.key}</TooltipContent>
-              </Tooltip>
-            ))}
+            {allSkills.map((skill, index) => {
+              const SkillIcon = skillComponents[skill.component];
+
+              if (!SkillIcon) return null;
+
+              return (
+                <Tooltip key={`${skill.component}-${index}`}>
+                  <TooltipTrigger asChild>
+                    <div className="mt-4 size-6 hover:cursor-pointer">
+                      <SkillIcon />
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>{skill.name}</TooltipContent>
+                </Tooltip>
+              );
+            })}
           </div>
         </div>
       </div>

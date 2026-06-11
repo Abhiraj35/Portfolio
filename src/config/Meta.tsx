@@ -62,6 +62,24 @@ export const pageMetadata: Record<string, PageMeta> = {
     twitterCard: 'summary',
   },
 
+  // Skills page
+  '/skills': {
+    title: 'Skills - Technologies & Tools',
+    description:
+      'Explore the technologies, frameworks, and tools I use for full-stack web development.',
+    keywords: [
+      'skills',
+      'tech stack',
+      'technologies',
+      'typescript',
+      'react',
+      'nextjs',
+      'full-stack',
+    ],
+    ogImage: '/meta/opengraph-image.jpg',
+    twitterCard: 'summary_large_image',
+  },
+
   // Projects page
   '/projects': {
     title: 'Projects - My Work & Projects Portfolio',

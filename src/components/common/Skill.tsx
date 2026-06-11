@@ -11,11 +11,12 @@ export default function Skill({ name, href, children }: SkillProps) {
   return (
     <Link
       href={href ?? ''}
-      target="_blank"
-      className="inline-flex items-center text-sm bg-black/5 dark:bg-white/15 border border-dashed dark:border-white/30 border-black/20 py-1 px-2 rounded-md skill-inner-shadow self-end text-black dark:text-white"
+      className="inline-flex items-center gap-1.5 text-sm bg-black/5 dark:bg-white/15 border border-dashed dark:border-white/30 border-black/20 py-1 px-2 rounded-md skill-inner-shadow text-black dark:text-white"
     >
-      <div className="size-4 shrink-0">{children}</div>
-      <p className="ml-1 text-sm font-bold">{name}</p>
+      <span className="flex size-4 shrink-0 items-center justify-center [&_svg]:size-full">
+        {children}
+      </span>
+      <span className="text-sm font-bold leading-none">{name}</span>
     </Link>
   );
 }

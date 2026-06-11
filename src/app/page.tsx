@@ -2,6 +2,7 @@ import Container from '@/components/common/Container';
 import Blog from '@/components/landing/Blog';
 import Hero from '@/components/landing/Hero';
 import Work from '@/components/landing/Projects';
+import Skills from '@/components/landing/Skills';
 import Education from '@/components/landing/Education';
 import LeetCode from '@/components/landing/LeetCode';
 
@@ -11,6 +12,7 @@ export default function page() {
   return (
     <Container className="min-h-screen py-16">
       <Hero />
+      <Skills />
       <Work />
       <Education />
       <LeetCode />

@@ -12,6 +12,10 @@ export const navbarConfig = {
   },
   navItems: [
     {
+      label: 'Skills',
+      href: '/skills',
+    },
+    {
       label: 'Blogs',
       href: '/blog',
     },
