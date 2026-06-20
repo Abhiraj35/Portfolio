@@ -8,6 +8,7 @@ import { Project } from '@/types/project';
 import Bun from '@/components/technologies/Bun';
 import NextJs from '@/components/technologies/NextJs';
 import Shadcn from '@/components/technologies/Shadcn';
+import Pnpm from '@/components/technologies/Pnpm';
 
 export const projects: Project[] = [
   {
@@ -48,6 +49,24 @@ export const projects: Project[] = [
     isWorking: true,
   },
   {
+    title: 'InkHive',
+    description:
+      'A multi-agent AI content platform that turns a single topic or article into blog posts, social content, email newsletters, and SEO metadata. Specialized agents research, write, optimize, and prepare assets for publishing.',
+    image: '/project/inkhive.png',
+    link: 'https://ink-hive-pearl.vercel.app',
+    github: 'https://github.com/Abhiraj35/InkHive',
+    technologies: [
+      { name: 'Pnpm', icon: <Pnpm key="pnpm" /> },
+      { name: 'Next.js', icon: <NextJs key="nextjs" /> },
+      { name: 'TypeScript', icon: <TypeScript key="typescript" /> },
+      { name: 'Tailwind CSS', icon: <TailwindCss key="tailwindcss" /> },
+      { name: 'shadcn/ui', icon: <Shadcn key="shadcn" /> },
+    ],
+    live: 'https://ink-hive-pearl.vercel.app',
+    details: false,
+    projectDetailsPageSlug: '/projects/inkhive',
+    isWorking: true,
+  },{
     title: 'GitTutorial',
     description:
       'A Git tutorial built with React.js, JavaScript, and Tailwind CSS Gemini SDK.',
@@ -62,24 +81,6 @@ export const projects: Project[] = [
     live: 'https://git-tutorials.netlify.app',
     details: false,
     projectDetailsPageSlug: '/projects/GitTutorial',
-    isWorking: true,
-  },
-  {
-    title: 'InkHive',
-    description:
-      'A multi-agent AI content platform that turns a single topic or article into blog posts, social content, email newsletters, and SEO metadata. Specialized agents research, write, optimize, and prepare assets for publishing.',
-    image: '/project/inkhive.png',
-    link: 'https://ink-hive-pearl.vercel.app',
-    github: 'https://github.com/Abhiraj35/InkHive',
-    technologies: [
-      { name: 'Next.js', icon: <NextJs key="nextjs" /> },
-      { name: 'TypeScript', icon: <TypeScript key="typescript" /> },
-      { name: 'Tailwind CSS', icon: <TailwindCss key="tailwindcss" /> },
-      { name: 'shadcn/ui', icon: <Shadcn key="shadcn" /> },
-    ],
-    live: 'https://ink-hive-pearl.vercel.app',
-    details: false,
-    projectDetailsPageSlug: '/projects/inkhive',
     isWorking: true,
   },
 ];
