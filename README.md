@@ -49,6 +49,20 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
+## Contact Form Email
+
+The contact API sends email through Resend without adding a runtime package. Add these environment variables before using the form in production:
+
+```bash
+RESEND_API_KEY=your_resend_api_key
+CONTACT_TO_EMAIL=you@example.com
+CONTACT_FROM_EMAIL="Portfolio Contact <contact@yourdomain.com>"
+```
+
+`CONTACT_FROM_EMAIL` must use a domain verified in Resend. Do not use a personal Gmail address as the sender; keep the visitor's email in `reply_to`, which the API handles automatically.
+
+The API returns success only after the email provider accepts the message.
+
 ## Production Build
 
 ```bash

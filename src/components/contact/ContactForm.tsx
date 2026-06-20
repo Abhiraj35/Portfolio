@@ -28,19 +28,21 @@ import * as z from 'zod';
 import SendIcon from '../svgs/SendIcon';
 
 const contactFormSchema = z.object({
-  name: z.string().min(2, {
-    message: 'Name must be at least 2 characters.',
-  }),
-  email: z.string().email({
-    message: 'Please enter a valid email address.',
-  }),
-  phone: z
+  name: z
     .string()
-    .min(10, {
-      message: 'Phone number must be at least 10 characters.',
+    .min(2, {
+      message: 'Name must be at least 2 characters.',
     })
-    .regex(/^[\+]?[1-9][\d]{0,15}$/, {
-      message: 'Please enter a valid phone number.',
+    .max(100, {
+      message: 'Name must not exceed 100 characters.',
+    }),
+  email: z
+    .string()
+    .email({
+      message: 'Please enter a valid email address.',
+    })
+    .max(120, {
+      message: 'Email must not exceed 120 characters.',
     }),
   message: z
     .string()
@@ -50,9 +52,25 @@ const contactFormSchema = z.object({
     .max(1000, {
       message: 'Message must not exceed 1000 characters.',
     }),
+  company: z.string().optional(),
 });
 
 type ContactFormValues = z.infer<typeof contactFormSchema>;
+
+type ContactApiResponse = {
+  error?: string;
+  message?: string;
+  retryAfter?: number;
+};
+
+function getRateLimitMessage(retryAfter?: number) {
+  if (!retryAfter) {
+    return 'You have sent a few messages recently. Please wait a bit before trying again.';
+  }
+
+  const minutes = Math.ceil(retryAfter / 60);
+  return `You have sent a few messages recently. Please try again in about ${minutes} minute${minutes === 1 ? '' : 's'}.`;
+}
 
 export default function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -63,6 +81,7 @@ export default function ContactForm() {
       name: '',
       email: '',
       message: '',
+      company: '',
     },
   });
 
@@ -78,11 +97,15 @@ export default function ContactForm() {
         body: JSON.stringify(data),
       });
 
-      const result = await response.json();
+      const result = (await response
+        .json()
+        .catch(() => ({}))) as ContactApiResponse;
 
       if (response.ok) {
-        toast.success('Message sent successfully!');
+        toast.success(result.message || 'Message sent successfully!');
         form.reset();
+      } else if (response.status === 429) {
+        toast.error(getRateLimitMessage(result.retryAfter));
       } else {
         toast.error(
           result.error || 'Failed to send message. Please try again.',
@@ -108,6 +131,15 @@ export default function ContactForm() {
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <input
+              type="text"
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              className="hidden"
+              {...form.register('company')}
+            />
+
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               <FormField
                 control={form.control}
@@ -124,22 +156,22 @@ export default function ContactForm() {
               />
 
               <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email *</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="your.email@example.com"
-                      type="email"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email *</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="your.email@example.com"
+                        type="email"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
 
             <FormField
@@ -160,7 +192,12 @@ export default function ContactForm() {
               )}
             />
 
-            <Button type="submit" className="w-fit" disabled={isSubmitting}>
+            <Button
+              type="submit"
+              className="w-fit"
+              disabled={isSubmitting}
+              aria-busy={isSubmitting}
+            >
               {isSubmitting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />

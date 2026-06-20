@@ -1,20 +1,49 @@
 import { NextRequest, NextResponse } from 'next/server';
 import * as z from 'zod';
+import dns from 'node:dns';
 
-const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
+dns.setDefaultResultOrder('ipv4first');
 
-const RATE_LIMIT_WINDOW = 60 * 1000;
-const RATE_LIMIT_MAX_REQUESTS = 5;
+type RateLimitEntry = {
+  count: number;
+  resetTime: number;
+};
+
+type ContactSubmission = z.infer<typeof contactSchema>;
+type EmailResult =
+  | {
+      sent: true;
+    }
+  | {
+      sent: false;
+      error: string;
+    };
+
+const rateLimitStore = new Map<string, RateLimitEntry>();
+
+const RATE_LIMIT_WINDOW = 10 * 60 * 1000;
+const RATE_LIMIT_MAX_REQUESTS = 3;
 
 const contactSchema = z.object({
-  name: z.string().min(2).max(100),
-  email: z.string().email(),
-  phone: z.string().min(10).max(20),
-  message: z.string().min(10).max(1000),
+  name: z.string().trim().min(2).max(100),
+  email: z.string().trim().email().max(120),
+  message: z.string().trim().min(10).max(1000),
+  company: z.string().optional(),
 });
 
+const HTML_ESCAPE_MAP: Record<string, string> = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#39;',
+};
+
+function escapeHtml(value: string) {
+  return value.replace(/[&<>"']/g, (character) => HTML_ESCAPE_MAP[character]);
+}
+
 function getClientIP(request: NextRequest): string {
-  // Get IP from various headers in order of preference
   const forwarded = request.headers.get('x-forwarded-for');
   const realIP = request.headers.get('x-real-ip');
   const cfConnectingIP = request.headers.get('cf-connecting-ip');
@@ -22,9 +51,11 @@ function getClientIP(request: NextRequest): string {
   if (forwarded) {
     return forwarded.split(',')[0].trim();
   }
+
   if (realIP) {
     return realIP;
   }
+
   if (cfConnectingIP) {
     return cfConnectingIP;
   }
@@ -32,159 +63,225 @@ function getClientIP(request: NextRequest): string {
   return 'unknown';
 }
 
+function pruneRateLimitStore(now: number) {
+  for (const [clientIP, clientData] of rateLimitStore) {
+    if (now > clientData.resetTime) {
+      rateLimitStore.delete(clientIP);
+    }
+  }
+}
+
 function checkRateLimit(clientIP: string): {
   allowed: boolean;
   remaining: number;
+  resetTime: number;
+  retryAfter: number;
 } {
   const now = Date.now();
+  pruneRateLimitStore(now);
+
   const clientData = rateLimitStore.get(clientIP);
 
-  if (!clientData || now > clientData.resetTime) {
-    // First request or window expired
+  if (!clientData) {
+    const resetTime = now + RATE_LIMIT_WINDOW;
+
     rateLimitStore.set(clientIP, {
       count: 1,
-      resetTime: now + RATE_LIMIT_WINDOW,
+      resetTime,
     });
-    return { allowed: true, remaining: RATE_LIMIT_MAX_REQUESTS - 1 };
+
+    return {
+      allowed: true,
+      remaining: RATE_LIMIT_MAX_REQUESTS - 1,
+      resetTime,
+      retryAfter: Math.ceil((resetTime - now) / 1000),
+    };
   }
+
+  const retryAfter = Math.ceil((clientData.resetTime - now) / 1000);
 
   if (clientData.count >= RATE_LIMIT_MAX_REQUESTS) {
-    return { allowed: false, remaining: 0 };
+    return {
+      allowed: false,
+      remaining: 0,
+      resetTime: clientData.resetTime,
+      retryAfter,
+    };
   }
 
-  // Increment count
-  clientData.count++;
+  clientData.count += 1;
   rateLimitStore.set(clientIP, clientData);
 
   return {
     allowed: true,
     remaining: RATE_LIMIT_MAX_REQUESTS - clientData.count,
+    resetTime: clientData.resetTime,
+    retryAfter,
   };
 }
 
-async function sendToTelegram(data: {
-  name: string;
-  email: string;
-  phone: string;
-  message: string;
-}): Promise<boolean> {
-  const telegramToken = process.env.TELEGRAM_BOT_TOKEN;
-  const telegramChatId = process.env.TELEGRAM_CHAT_ID;
+function getRateLimitHeaders(rateLimit: {
+  remaining: number;
+  resetTime: number;
+  retryAfter: number;
+}) {
+  return {
+    'Retry-After': rateLimit.retryAfter.toString(),
+    'X-RateLimit-Limit': RATE_LIMIT_MAX_REQUESTS.toString(),
+    'X-RateLimit-Remaining': rateLimit.remaining.toString(),
+    'X-RateLimit-Reset': rateLimit.resetTime.toString(),
+  };
+}
 
-  if (!telegramToken) {
-    console.error('TELEGRAM_BOT_TOKEN not configured');
-    return false;
+function getEmailContent(data: ContactSubmission) {
+  const submittedAt = new Date().toISOString();
+  const safeName = escapeHtml(data.name);
+  const safeEmail = escapeHtml(data.email);
+  const safeMessage = escapeHtml(data.message).replace(/\n/g, '<br />');
+
+  return {
+    subject: `Portfolio contact from ${data.name}`,
+    text: [
+      'New contact form submission',
+      '',
+      `Name: ${data.name}`,
+      `Email: ${data.email}`,
+      '',
+      'Message:',
+      data.message,
+      '',
+      `Submitted: ${submittedAt}`,
+    ].join('\n'),
+    html: `
+      <div style="font-family:Arial,sans-serif;line-height:1.6;color:#111827;">
+        <h2 style="margin:0 0 16px;">New contact form submission</h2>
+        <p><strong>Name:</strong> ${safeName}</p>
+        <p><strong>Email:</strong> <a href="mailto:${safeEmail}">${safeEmail}</a></p>
+        <p><strong>Message:</strong></p>
+        <p>${safeMessage}</p>
+        <p style="color:#6b7280;font-size:12px;">Submitted: ${submittedAt}</p>
+      </div>
+    `.trim(),
+  };
+}
+
+function getEmailProviderError(errorText: string) {
+  if (errorText.includes('domain is not verified')) {
+    return 'Contact email sender is not verified. Please configure CONTACT_FROM_EMAIL with a verified Resend domain address.';
   }
 
-  if (!telegramChatId) {
-    console.error('TELEGRAM_CHAT_ID not configured');
-    return false;
+  return 'Message delivery failed. Please email me directly.';
+}
+
+async function sendEmail(data: ContactSubmission): Promise<EmailResult> {
+  const resendApiKey = process.env.RESEND_API_KEY;
+  const contactToEmail = process.env.CONTACT_TO_EMAIL;
+  const contactFromEmail = process.env.CONTACT_FROM_EMAIL;
+
+  if (!resendApiKey || !contactToEmail || !contactFromEmail) {
+    console.error('Contact email environment variables are not configured');
+    return {
+      sent: false,
+      error: 'Message delivery is not configured yet. Please email me directly.',
+    };
   }
 
-  const message = `
-🔔 *New Contact Form Submission*
+  const emailContent = getEmailContent(data);
+  const response = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${resendApiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: contactFromEmail,
+      to: [contactToEmail],
+      reply_to: data.email,
+      subject: emailContent.subject,
+      text: emailContent.text,
+      html: emailContent.html,
+    }),
+  });
 
-👤 *Name:* ${data.name.trim()}
-📧 *Email:* ${data.email.trim()}
-📱 *Phone:* ${data.phone.trim()}
+  if (response.ok) {
+    return { sent: true };
+  }
 
-💬 *Message:*
-${data.message.trim()}
+  const errorText = await response.text();
+  console.error('Failed to send contact email:', errorText);
+  return {
+    sent: false,
+    error: getEmailProviderError(errorText),
+  };
+}
 
-⏰ *Submitted:* ${new Date().toISOString()}
-📍 *Timezone:* ${Intl.DateTimeFormat().resolvedOptions().timeZone}
-  `.trim();
-
+async function getRequestBody(request: NextRequest) {
   try {
-    const telegramUrl = `https://api.telegram.org/bot${telegramToken}/sendMessage`;
-
-    const response = await fetch(telegramUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        chat_id: telegramChatId,
-        text: message,
-        parse_mode: 'Markdown',
-      }),
-    });
-
-    if (response.ok) {
-      return true;
-    } else {
-      const errorText = await response.text();
-      console.error('Failed to send to Telegram:', errorText);
-      return false;
-    }
-  } catch (error) {
-    console.error('Error sending to Telegram:', error);
-    return false;
+    return await request.json();
+  } catch {
+    return null;
   }
 }
 
 export async function POST(request: NextRequest) {
-  try {
-    const clientIP = getClientIP(request);
-    const rateLimit = checkRateLimit(clientIP);
+  const body = await getRequestBody(request);
+  const parsedData = contactSchema.safeParse(body);
 
-    if (!rateLimit.allowed) {
-      return NextResponse.json(
-        {
-          error: 'Too many requests. Please try again later.',
-          retryAfter: RATE_LIMIT_WINDOW / 1000,
-        },
-        {
-          status: 429,
-          headers: {
-            'X-RateLimit-Limit': RATE_LIMIT_MAX_REQUESTS.toString(),
-            'X-RateLimit-Remaining': rateLimit.remaining.toString(),
-            'X-RateLimit-Reset': (Date.now() + RATE_LIMIT_WINDOW).toString(),
-          },
-        },
-      );
-    }
+  if (!parsedData.success) {
+    return NextResponse.json(
+      { error: 'Please check the form and try again.' },
+      { status: 400 },
+    );
+  }
 
-    const body = await request.json();
-    const validatedData = contactSchema.parse(body);
+  if (parsedData.data.company?.trim()) {
+    return NextResponse.json({
+      message: 'Message sent successfully.',
+      success: true,
+    });
+  }
 
-    const telegramSent = await sendToTelegram(validatedData);
+  const clientIP = getClientIP(request);
+  const rateLimit = checkRateLimit(clientIP);
+  const headers = getRateLimitHeaders(rateLimit);
 
-    if (!telegramSent) {
-      return NextResponse.json(
-        { error: 'Failed to send message. Please try again.' },
-        { status: 500 },
-      );
-    }
-
+  if (!rateLimit.allowed) {
     return NextResponse.json(
       {
-        message: 'Message sent successfully!',
-        success: true,
+        error:
+          'You have sent a few messages recently. Please wait before trying again.',
+        retryAfter: rateLimit.retryAfter,
       },
       {
-        headers: {
-          'X-RateLimit-Limit': RATE_LIMIT_MAX_REQUESTS.toString(),
-          'X-RateLimit-Remaining': rateLimit.remaining.toString(),
-        },
+        status: 429,
+        headers,
       },
     );
-  } catch (error) {
-    console.error('API Error:', error);
+  }
 
-    if (error instanceof z.ZodError) {
+  try {
+    const emailResult = await sendEmail(parsedData.data);
+
+    if (!emailResult.sent) {
       return NextResponse.json(
-        {
-          error: 'Invalid form data',
-          details: error,
-        },
-        { status: 400 },
+        { error: emailResult.error },
+        { status: 500, headers },
       );
     }
 
     return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 },
+      {
+        message: "Thanks for your message. I'll get back to you soon.",
+        success: true,
+      },
+      { headers },
+    );
+  } catch (error) {
+    console.error('Contact API error:', error);
+
+    return NextResponse.json(
+      { error: 'Something went wrong. Please try again later.' },
+      { status: 500, headers },
     );
   }
 }
