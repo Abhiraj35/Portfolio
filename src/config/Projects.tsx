@@ -9,6 +9,7 @@ import Bun from '@/components/technologies/Bun';
 import NextJs from '@/components/technologies/NextJs';
 import Shadcn from '@/components/technologies/Shadcn';
 import Pnpm from '@/components/technologies/Pnpm';
+import ConvexLogo from '@/components/svgs/ConvexLogo';
 
 export const projects: Project[] = [
   {
@@ -59,6 +60,7 @@ export const projects: Project[] = [
       { name: 'Pnpm', icon: <Pnpm key="pnpm" /> },
       { name: 'Next.js', icon: <NextJs key="nextjs" /> },
       { name: 'TypeScript', icon: <TypeScript key="typescript" /> },
+      { name: 'Convex', icon: <ConvexLogo key="convex" /> },
       { name: 'Tailwind CSS', icon: <TailwindCss key="tailwindcss" /> },
       { name: 'shadcn/ui', icon: <Shadcn key="shadcn" /> },
     ],
