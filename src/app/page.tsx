@@ -12,8 +12,8 @@ export default function page() {
   return (
     <Container className="min-h-screen py-16">
       <Hero />
-      <Skills />
       <Work />
+      <Skills />
       <Education />
       <LeetCode />
       <Blog />
