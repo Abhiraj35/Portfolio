@@ -77,7 +77,7 @@ export const socialLinks = [
   },
   {
     name: 'Email',
-    href: 'mailto:royabhi2406@gmail.com',
+    href: 'mailto:abhirajkumar01.dev@gmail.com',
     icon: <Mail />,
   },
 ];
