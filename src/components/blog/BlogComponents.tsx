@@ -172,6 +172,79 @@ export const BlogComponents = {
       </code>
     );
   },
+  // Custom table styling
+  table: ({
+    children,
+    ...props
+  }: {
+    children: React.ReactNode;
+    [key: string]: unknown;
+  }) => (
+    <div className="mb-4 overflow-x-auto">
+      <table
+        className="w-full border-collapse text-sm text-muted-foreground"
+        {...props}
+      >
+        {children}
+      </table>
+    </div>
+  ),
+  thead: ({
+    children,
+    ...props
+  }: {
+    children: React.ReactNode;
+    [key: string]: unknown;
+  }) => (
+    <thead className="border-b border-border" {...props}>
+      {children}
+    </thead>
+  ),
+  tbody: ({
+    children,
+    ...props
+  }: {
+    children: React.ReactNode;
+    [key: string]: unknown;
+  }) => (
+    <tbody {...props}>{children}</tbody>
+  ),
+  tr: ({
+    children,
+    ...props
+  }: {
+    children: React.ReactNode;
+    [key: string]: unknown;
+  }) => (
+    <tr className="border-b border-border last:border-0" {...props}>
+      {children}
+    </tr>
+  ),
+  th: ({
+    children,
+    ...props
+  }: {
+    children: React.ReactNode;
+    [key: string]: unknown;
+  }) => (
+    <th
+      className="px-4 py-3 text-left font-semibold text-foreground"
+      {...props}
+    >
+      {children}
+    </th>
+  ),
+  td: ({
+    children,
+    ...props
+  }: {
+    children: React.ReactNode;
+    [key: string]: unknown;
+  }) => (
+    <td className="px-4 py-3" {...props}>
+      {children}
+    </td>
+  ),
   // Custom blockquote styling
   blockquote: ({
     children,
