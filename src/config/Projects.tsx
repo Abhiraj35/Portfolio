@@ -10,8 +10,28 @@ import NextJs from '@/components/technologies/NextJs';
 import Shadcn from '@/components/technologies/Shadcn';
 import Pnpm from '@/components/technologies/Pnpm';
 import ConvexLogo from '@/components/svgs/ConvexLogo';
+import SocketIo from '@/components/technologies/SocketIo';
 
 export const projects: Project[] = [
+  {
+    title: 'TypeWing',
+    description:
+      'A minimalist, high-performance typing test and real-time multiplayer racing platform. Race up to 8 players in live Socket.IO rooms with stroke-by-stroke WPM analytics, dynamic virtual keyboards, and mechanical switch soundscapes.',
+    image: '/project/typewing.png',
+    link: 'https://type-wing.vercel.app',
+    github: 'https://github.com/Abhiraj35/TypeWing',
+    technologies: [
+      { name: 'Next.js', icon: <NextJs key="nextjs" /> },
+      { name: 'React.js', icon: <ReactIcon key="react" /> },
+      { name: 'TypeScript', icon: <TypeScript key="typescript" /> },
+      { name: 'Tailwind CSS', icon: <TailwindCss key="tailwindcss" /> },
+      { name: 'Socket.IO', icon: <SocketIo key="socketio" /> },
+    ],
+    live: 'https://type-wing.vercel.app',
+    details: false,
+    projectDetailsPageSlug: '/projects/typewing',
+    isWorking: true,
+  },
   {
   title: 'bextool',
   description:

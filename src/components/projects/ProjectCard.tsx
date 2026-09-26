@@ -1,27 +1,25 @@
 'use client';
 
 import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from '@/components/ui/card';
-import {
   Dialog,
   DialogContent,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { type Project } from '@/types/project';
-import Link from 'next/link';
+import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 import React, { useState } from 'react';
 
-import ArrowRight from '../svgs/ArrowRight';
 import Github from '../svgs/Github';
 import PlayCircle from '../svgs/PlayCircle';
 import Website from '../svgs/Website';
-import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
 interface ProjectCardProps {
   project: Project;
@@ -30,141 +28,151 @@ interface ProjectCardProps {
 export function ProjectCard({ project }: ProjectCardProps) {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
-  return (
-    <Card className="group/card h-full w-full overflow-hidden border-black/20 pb-4 shadow-none transition-[border-color,box-shadow] duration-300 ease-out hover:border-primary/40 hover:shadow-sm dark:border-white/10">
-      <CardHeader className="p-0">
-        <div className="relative aspect-video overflow-hidden">
-          <Image
-            className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover/card:scale-[1.02]"
-            src={project.image}
-            alt={project.title}
-            width={1920}
-            height={1080}
-          />
-          {project.video && (
-            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-              <DialogTrigger asChild>
-                <div className="absolute inset-0 flex cursor-pointer items-center justify-center bg-black/30 opacity-0 transition-opacity duration-300 ease-out group-hover/card:opacity-100">
-                  <div className="flex size-14 scale-90 items-center justify-center rounded-full bg-white/25 text-white backdrop-blur-sm transition-transform duration-300 ease-out group-hover/card:scale-100">
-                    <PlayCircle />
-                  </div>
-                </div>
-              </DialogTrigger>
-              <DialogContent className="max-w-4xl w-full p-0 border-0">
-                <div className="aspect-video w-full">
-                  <video
-                    className="h-full w-full object-cover rounded-lg"
-                    src={project.video}
-                    autoPlay
-                    loop
-                    controls
-                  />
-                </div>
-                <DialogTitle className="sr-only">{project.title}</DialogTitle>
-              </DialogContent>
-            </Dialog>
-          )}
-        </div>
-      </CardHeader>
+  // Link target: if case study exists, link to it; otherwise directly link to live demo
+  const primaryHref = project.details
+    ? project.projectDetailsPageSlug
+    : project.live || project.link;
+  const isExternal = !project.details;
 
-      <CardContent className="px-6">
-        <div className="space-y-4">
-          {/* Project Header - Title and Icons */}
-          <div className="flex items-center justify-between gap-4">
-            <Link href={project.projectDetailsPageSlug}>
-              <h3 className="text-xl font-semibold leading-tight transition-colors duration-300 ease-out group-hover/card:text-primary">
+  return (
+    <article className="group/card relative flex h-full flex-col overflow-hidden rounded-2xl border border-black/[0.08] bg-card text-card-foreground shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-black/20 hover:shadow-[0_12px_28px_-8px_rgba(0,0,0,0.1)] dark:border-white/[0.08] dark:bg-neutral-900/50 dark:shadow-[0_2px_10px_-4px_rgba(0,0,0,0.4)] dark:hover:border-white/20 dark:hover:shadow-[0_12px_28px_-8px_rgba(0,0,0,0.6)]">
+      {/* Media / Preview Header */}
+      <div className="relative aspect-[16/10] w-full overflow-hidden bg-neutral-100 dark:bg-neutral-950 border-b border-black/[0.06] dark:border-white/[0.08]">
+        <Image
+          className="h-full w-full object-cover object-top transition-transform duration-500 ease-out group-hover/card:scale-[1.03]"
+          src={project.image}
+          alt={project.title}
+          width={1280}
+          height={800}
+          priority={false}
+        />
+
+        {/* Crisp inner border ring */}
+        <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-black/5 dark:ring-white/10" />
+
+        {/* Video Preview Overlay (only on hover if project has a video) */}
+        {project.video && (
+          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <DialogTrigger asChild>
+              <button
+                type="button"
+                aria-label={`Watch video preview for ${project.title}`}
+                className="absolute inset-0 flex cursor-pointer items-center justify-center bg-black/35 opacity-0 transition-opacity duration-300 ease-out group-hover/card:opacity-100 focus:opacity-100 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
+              >
+                <div className="flex size-14 scale-90 items-center justify-center rounded-full bg-white/25 text-white backdrop-blur-sm transition-transform duration-300 ease-out group-hover/card:scale-100">
+                  <PlayCircle />
+                </div>
+              </button>
+            </DialogTrigger>
+            <DialogContent className="max-w-4xl w-full p-0 border-0 bg-transparent overflow-hidden">
+              <div className="aspect-video w-full rounded-2xl overflow-hidden shadow-2xl bg-black">
+                <video
+                  className="h-full w-full object-cover"
+                  src={project.video}
+                  autoPlay
+                  loop
+                  controls
+                />
+              </div>
+              <DialogTitle className="sr-only">
+                {project.title} Preview
+              </DialogTitle>
+            </DialogContent>
+          </Dialog>
+        )}
+      </div>
+
+      {/* Content Area */}
+      <div className="flex flex-1 flex-col justify-between p-5 gap-3.5">
+        <div className="space-y-3">
+          {/* Project Header - Title on left, Action Icons on right */}
+          <div className="flex items-start justify-between gap-3">
+            <Link
+              href={primaryHref}
+              target={isExternal ? '_blank' : undefined}
+              rel={isExternal ? 'noopener noreferrer' : undefined}
+              className="group/title inline-flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+            >
+              <h3 className="text-lg font-semibold tracking-tight text-foreground transition-colors duration-200 group-hover/card:text-primary">
                 {project.title}
               </h3>
+              <ArrowUpRight className="size-4 shrink-0 text-muted-foreground/70 transition-all duration-300 ease-out group-hover/card:translate-x-0.5 group-hover/card:-translate-y-0.5 group-hover/card:text-primary" />
             </Link>
-            <div className="flex items-center gap-2">
+
+            <div className="flex items-center gap-1 shrink-0 pt-0.5">
               <Tooltip>
-                <TooltipTrigger>
+                <TooltipTrigger asChild>
                   <Link
-                    className="text-secondary flex size-6 items-center justify-center hover:text-primary transition-colors"
-                    href={project.link}
+                    href={project.live || project.link}
                     target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-neutral-100 hover:text-foreground dark:hover:bg-neutral-800"
+                    aria-label={`Visit ${project.title}`}
                   >
-                    <Website />
+                    <Website className="size-4" />
                   </Link>
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>View Website</p>
                 </TooltipContent>
               </Tooltip>
-              <Tooltip>
-                <TooltipTrigger>
-                  {project.github && (
+
+              {project.github && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
                     <Link
-                      className="text-secondary flex size-6 items-center justify-center hover:text-primary transition-colors"
                       href={project.github}
                       target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-neutral-100 hover:text-foreground dark:hover:bg-neutral-800"
+                      aria-label={`View GitHub source code for ${project.title}`}
                     >
-                      <Github />
+                      <Github className="size-4" />
                     </Link>
-                  )}
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>View GitHub</p>
-                </TooltipContent>
-              </Tooltip>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>View Source</p>
+                  </TooltipContent>
+                </Tooltip>
+              )}
             </div>
           </div>
 
           {/* Description */}
-          <p className="text-secondary line-clamp-2">{project.description}</p>
+          <p className="text-xs sm:text-[13px] leading-relaxed text-muted-foreground line-clamp-2">
+            {project.description}
+          </p>
 
-          {/* Technologies */}
-          <div>
-            <h4 className="text-sm font-medium mb-2 text-secondary">
-              Technologies
-            </h4>
-            <div className="flex flex-wrap gap-2">
-              {project.technologies.map((technology, index) => (
-                <Tooltip key={index}>
-                  <TooltipTrigger>
-                    <div className="size-6 transition-transform duration-200 ease-out hover:scale-110">
-                      {technology.icon}
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>{technology.name}</p>
-                  </TooltipContent>
-                </Tooltip>
-              ))}
-            </div>
+          {/* Technology Badges */}
+          <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+            {project.technologies.map((technology, index) => (
+              <span
+                key={index}
+                className="inline-flex items-center gap-1.5 rounded-md border border-black/[0.06] bg-neutral-100/80 px-2 py-1 text-[11px] font-medium text-neutral-700 transition-colors hover:bg-neutral-200/70 hover:text-neutral-900 dark:border-white/[0.08] dark:bg-neutral-900/60 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:hover:text-neutral-100"
+              >
+                <span className="flex size-3.5 shrink-0 items-center justify-center">
+                  {technology.icon}
+                </span>
+                <span className="leading-none">{technology.name}</span>
+              </span>
+            ))}
           </div>
         </div>
-      </CardContent>
 
-      {project.details && (
-        <CardFooter className="p-6 pt-0 flex justify-between">
-          <div
-            className={`flex items-center gap-1 rounded-md px-2 py-1 text-xs ${
-              project.isWorking
-                ? 'border-green-300 bg-green-500/10'
-                : 'border-red-300 bg-red-500/10'
-            }`}
-          >
-            {project.isWorking ? (
-              <>
-                <div className="size-2 rounded-full bg-green-500 animate-pulse" />
-                All Systems Operational
-              </>
-            ) : (
-              <>
-                <div className="size-2 rounded-full bg-red-500 animate-pulse" />
-                Building
-              </>
-            )}
+        {/* Optional Case Study Link (only shown if case study details exist) */}
+        {project.details && (
+          <div className="mt-auto pt-3 border-t border-black/[0.06] dark:border-white/[0.08]">
+            <Link
+              href={project.projectDetailsPageSlug}
+              className="group/details inline-flex items-center gap-1 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <span>View Case Study</span>
+              <ArrowRight className="size-3.5 transition-transform duration-200 group-hover/details:translate-x-0.5" />
+            </Link>
           </div>
-          <Link
-            href={project.projectDetailsPageSlug}
-            className="text-secondary flex items-center gap-2 text-sm hover:underline underline-offset-4 hover:text-primary transition-colors"
-          >
-            View Details <ArrowRight className="size-4" />
-          </Link>
-        </CardFooter>
-      )}
-    </Card>
+        )}
+      </div>
+    </article>
   );
 }
+

@@ -16,7 +16,7 @@ export default function Projects() {
 
       <ProjectList className="mt-8" projects={projects.slice(0, 4)} />
       <div className="mt-8 flex justify-center">
-        <Button variant="outline">
+        <Button variant="outline" asChild>
           <Link href="/projects">Show all projects</Link>
         </Button>
       </div>
