@@ -35,9 +35,9 @@ export function ProjectCard({ project }: ProjectCardProps) {
   const isExternal = !project.details;
 
   return (
-    <article className="group/card relative flex h-full flex-col overflow-hidden rounded-2xl border border-black/[0.08] bg-card text-card-foreground shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-black/20 hover:shadow-[0_12px_28px_-8px_rgba(0,0,0,0.1)] dark:border-white/[0.08] dark:bg-neutral-900/50 dark:shadow-[0_2px_10px_-4px_rgba(0,0,0,0.4)] dark:hover:border-white/20 dark:hover:shadow-[0_12px_28px_-8px_rgba(0,0,0,0.6)]">
+    <article className="group/card relative flex h-full flex-col overflow-hidden rounded-2xl border border-black/8 bg-card text-card-foreground shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-black/20 hover:shadow-[0_12px_28px_-8px_rgba(0,0,0,0.1)] dark:border-white/8 dark:bg-neutral-900/50 dark:shadow-[0_2px_10px_-4px_rgba(0,0,0,0.4)] dark:hover:border-white/20 dark:hover:shadow-[0_12px_28px_-8px_rgba(0,0,0,0.6)]">
       {/* Media / Preview Header */}
-      <div className="relative aspect-[16/10] w-full overflow-hidden bg-neutral-100 dark:bg-neutral-950 border-b border-black/[0.06] dark:border-white/[0.08]">
+      <div className="relative aspect-16/10 w-full overflow-hidden bg-neutral-100 dark:bg-neutral-950 border-b border-black/6 dark:border-white/8">
         <Image
           className="h-full w-full object-cover object-top transition-transform duration-500 ease-out group-hover/card:scale-[1.03]"
           src={project.image}
@@ -148,7 +148,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
             {project.technologies.map((technology, index) => (
               <span
                 key={index}
-                className="inline-flex items-center gap-1.5 rounded-md border border-black/[0.06] bg-neutral-100/80 px-2 py-1 text-[11px] font-medium text-neutral-700 transition-colors hover:bg-neutral-200/70 hover:text-neutral-900 dark:border-white/[0.08] dark:bg-neutral-900/60 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:hover:text-neutral-100"
+                className="inline-flex items-center gap-1.5 rounded-md border border-black/6 bg-neutral-100/80 px-2 py-1 text-[11px] font-medium text-neutral-700 transition-colors hover:bg-neutral-200/70 hover:text-neutral-900 dark:border-white/8 dark:bg-neutral-900/60 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:hover:text-neutral-100"
               >
                 <span className="flex size-3.5 shrink-0 items-center justify-center">
                   {technology.icon}
@@ -161,7 +161,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
 
         {/* Optional Case Study Link (only shown if case study details exist) */}
         {project.details && (
-          <div className="mt-auto pt-3 border-t border-black/[0.06] dark:border-white/[0.08]">
+          <div className="mt-auto pt-3 border-t border-black/6 dark:border-white/8">
             <Link
               href={project.projectDetailsPageSlug}
               className="group/details inline-flex items-center gap-1 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
