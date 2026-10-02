@@ -1,7 +1,6 @@
 "use client";
 import { navbarConfig } from "@/config/Navbar";
 import Link from "next/link";
-import Image from "next/image";
 import React from "react";
 
 import Container from "./Container";
