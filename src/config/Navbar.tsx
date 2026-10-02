@@ -4,13 +4,11 @@ export interface NavItem {
 }
 
 export const navbarConfig = {
-  logo: {
-    src: '/assets/logo.jpg',
-    alt: 'logo',
-    width: 100,
-    height: 100,
-  },
   navItems: [
+    {
+      label: 'Home',
+      href: '/',
+    },
     {
       label: 'Skills',
       href: '/skills',

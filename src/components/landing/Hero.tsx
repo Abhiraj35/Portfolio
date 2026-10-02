@@ -16,7 +16,8 @@ const buttonIcons = {
 };
 
 export default function Hero() {
-  const { name, title, avatar, skills, description, buttons } = heroConfig;
+  const { name, title, avatar, skills, description, location, email, buttons } =
+    heroConfig;
 
   const renderDescription = () => {
     const parts = parseTemplate(description.template, skills);
@@ -49,28 +50,53 @@ export default function Hero() {
 
   return (
     <Container className="mx-auto max-w-5xl">
-      {/* Image */}
-      <Image
-        src={avatar}
-        alt="hero"
-        width={100}
-        height={100}
-        className="size-24 rounded-full dark:bg-yellow-300 bg-blue-300"
-      />
-
-      {/* Text Area */}
-      <div className="mt-8 flex flex-col gap-2">
-        <h1 className="text-4xl font-bold">
-          Hi, I&apos;m {name} — <span className="text-secondary">{title}</span>
-        </h1>
-
-        <div className="mt-4 flex flex-wrap items-center gap-x-1.5 gap-y-2 text-base md:text-lg text-neutral-500 whitespace-pre-wrap">
-          {renderDescription()}
+      {/* Header: Avatar + Name + Title */}
+      <div className="flex items-center gap-4">
+        <Image
+          src={avatar}
+          alt="hero"
+          width={100}
+          height={100}
+          className="size-14 rounded-xl border border-neutral-200 dark:border-neutral-800 object-cover"
+        />
+        <div>
+          <h1 className="text-xl font-bold leading-tight">{name}</h1>
+          <p className="text-secondary text-sm">{title}</p>
         </div>
       </div>
 
+      {/* Metadata Row: Location & Email */}
+      <div className="mt-6 flex flex-wrap items-start gap-x-8 gap-y-3">
+        <div>
+          <span className="hero-meta-label">LOCATION</span>
+          <div className="flex items-center gap-1.5 text-sm text-foreground mt-0.5">
+            <svg xmlns="http://www.w3.org/2000/svg" className="size-3.5 text-secondary" fill="currentColor" viewBox="0 0 256 256">
+              <path d="M128,16a88.1,88.1,0,0,0-88,88c0,75.3,80,132.17,83.41,134.55a8,8,0,0,0,9.18,0C136,236.17,216,179.3,216,104A88.1,88.1,0,0,0,128,16Zm0,56a32,32,0,1,1-32,32A32,32,0,0,1,128,72Z"/>
+            </svg>
+            <span>{location}</span>
+          </div>
+        </div>
+
+        <div>
+          <span className="hero-meta-label">EMAIL</span>
+          <div className="flex items-center gap-1.5 text-sm text-foreground mt-0.5">
+            <svg xmlns="http://www.w3.org/2000/svg" className="size-3.5 text-secondary" fill="currentColor" viewBox="0 0 256 256">
+              <path d="M224,48H32a8,8,0,0,0-8,8V192a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A8,8,0,0,0,224,48ZM203.43,64,128,133.15,52.57,64ZM216,192H40V74.19l82.59,75.71a8,8,0,0,0,10.82,0L216,74.19V192Z"/>
+            </svg>
+            <Link href={`mailto:${email}`} className="hover:underline">
+              {email}
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* Bio / Description */}
+      <div className="mt-6 flex flex-wrap items-center gap-x-1.5 gap-y-2 text-sm md:text-[15px] text-secondary leading-relaxed">
+        {renderDescription()}
+      </div>
+
       {/* Buttons */}
-      <div className="mt-8 flex gap-4">
+      <div className="mt-8 flex flex-wrap gap-4">
         {buttons.map((button, index) => {
           const IconComponent =
             buttonIcons[button.icon as keyof typeof buttonIcons];
@@ -79,30 +105,30 @@ export default function Hero() {
               key={index}
               variant={button.variant as 'outline' | 'default'}
               className={cn(
-                button.variant === 'outline' &&
-                'inset-shadow-indigo-500',
-                button.variant === 'default' &&
-                'inset-shadow-indigo-500',
+                button.variant === 'outline' && 'inset-shadow-indigo-500',
+                button.variant === 'default' && 'inset-shadow-indigo-500',
               )}
+              asChild
             >
-              {IconComponent && <IconComponent />}
-              <Link href={button.href}>{button.text}</Link>
+              <Link href={button.href}>
+                {IconComponent && <IconComponent />}
+                {button.text}
+              </Link>
             </Button>
           );
         })}
       </div>
 
       {/* Social Links */}
-      <div className="mt-8 flex gap-2">
+      <div className="mt-6 flex items-center gap-3">
         {socialLinks.map((link) => (
           <Tooltip key={link.name} delayDuration={0}>
             <TooltipTrigger asChild>
               <Link
                 href={link.href}
-                key={link.name}
-                className="text-secondary flex items-center gap-2"
+                className="text-secondary hover:text-foreground transition-colors"
               >
-                <span className="size-6">{link.icon}</span>
+                <span className="size-5 block">{link.icon}</span>
               </Link>
             </TooltipTrigger>
             <TooltipContent>

@@ -9,6 +9,8 @@ export const heroConfig = {
   name: 'Abhiraj Kumar',
   title: 'Full Stack Web Developer',
   avatar: '/assets/logo.jpg',
+  location: 'Kolkata, India',
+  email: 'abhirajkumar01.dev@gmail.com',
 
   // Skills Configuration
   skills: [
